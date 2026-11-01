@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Cart</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Your Cart</h1>
+
+    <div th:if="${lines.isEmpty()}">
+        <p>Your cart is empty.</p>
+        <a class="btn" th:href="@{/}">Continue shopping</a>
+    </div>
+
+    <div th:unless="${lines.isEmpty()}">
+        <table>
+            <thead>
+            <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="line : ${lines}">
+                <td th:text="${line.product.name}">Name</td>
+                <td>₹<span th:text="${#numbers.formatDecimal(line.product.price, 1, 'COMMA', 2, 'POINT')}">0</span></td>
+                <td>
+                    <form class="inline" th:action="@{/cart/update/{id}(id=${line.product.id})}" method="post">
+                        <input type="number" name="qty" th:value="${line.quantity}" min="0" th:max="${line.product.stock}">
+                        <button type="submit" class="small">Update</button>
+                    </form>
+                </td>
+                <td>₹<span th:text="${#numbers.formatDecimal(line.subtotal, 1, 'COMMA', 2, 'POINT')}">0</span></td>
+                <td>
+                    <form class="inline" th:action="@{/cart/remove/{id}(id=${line.product.id})}" method="post">
+                        <button type="submit" class="small danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="3" class="right"><strong>Total</strong></td>
+                <td colspan="2"><strong>₹<span th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}">0</span></strong></td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <p>
+            <a th:href="@{/}">Continue shopping</a>
+            &nbsp;
+            <a class="btn" th:href="@{/checkout}">Proceed to Checkout</a>
+        </p>
+    </div>
+</main>
+</body>
+</html>

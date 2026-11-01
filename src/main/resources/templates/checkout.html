@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Checkout</h1>
+
+    <div class="two-col">
+        <form class="form" th:action="@{/checkout}" method="post">
+            <label>Full name
+                <input type="text" name="name" required>
+            </label>
+            <label>Email
+                <input type="email" name="email" required>
+            </label>
+            <label>Delivery address
+                <textarea name="address" rows="4" required></textarea>
+            </label>
+            <p class="muted">Payment: Cash on delivery (demo app, no real payments).</p>
+            <button type="submit">Place Order</button>
+        </form>
+
+        <div class="summary">
+            <h3>Order summary</h3>
+            <ul>
+                <li th:each="line : ${lines}">
+                    <span th:text="${line.quantity} + ' × ' + ${line.product.name}">1 × Item</span>
+                    <span>₹<span th:text="${#numbers.formatDecimal(line.subtotal, 1, 'COMMA', 2, 'POINT')}">0</span></span>
+                </li>
+            </ul>
+            <p><strong>Total: ₹<span th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}">0</span></strong></p>
+        </div>
+    </div>
+</main>
+</body>
+</html>

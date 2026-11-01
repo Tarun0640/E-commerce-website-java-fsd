@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order Confirmed</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+    <div class="alert success">Thank you! Your order has been placed.</div>
+
+    <h1>Order #<span th:text="${order.id}">1</span></h1>
+    <p>
+        <strong th:text="${order.customerName}">Name</strong><br>
+        <span th:text="${order.email}">email</span><br>
+        <span th:text="${order.address}">address</span>
+    </p>
+
+    <table>
+        <thead>
+        <tr><th>Item</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${order.items}">
+            <td th:text="${item.productName}">Name</td>
+            <td>₹<span th:text="${#numbers.formatDecimal(item.price, 1, 'COMMA', 2, 'POINT')}">0</span></td>
+            <td th:text="${item.quantity}">1</td>
+            <td>₹<span th:text="${#numbers.formatDecimal(item.subtotal, 1, 'COMMA', 2, 'POINT')}">0</span></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3" class="right"><strong>Total</strong></td>
+            <td><strong>₹<span th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')}">0</span></strong></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <p><a class="btn" th:href="@{/}">Continue shopping</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+    <h1>Admin</h1>
+    <p class="muted">No login on this page. It is meant for running on your own laptop only.</p>
+
+    <h2>Add a product</h2>
+    <form class="form" th:action="@{/admin/products}" method="post">
+        <label>Name <input type="text" name="name" required></label>
+        <label>Description <textarea name="description" rows="2"></textarea></label>
+        <label>Price (₹) <input type="number" name="price" step="0.01" min="0" required></label>
+        <label>Image URL (optional) <input type="text" name="imageUrl"></label>
+        <label>Stock <input type="number" name="stock" value="10" min="0" required></label>
+        <button type="submit">Add Product</button>
+    </form>
+
+    <h2>Products</h2>
+    <table>
+        <thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Stock</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="p : ${products}">
+            <td th:text="${p.id}">1</td>
+            <td th:text="${p.name}">Name</td>
+            <td>₹<span th:text="${#numbers.formatDecimal(p.price, 1, 'COMMA', 2, 'POINT')}">0</span></td>
+            <td th:text="${p.stock}">0</td>
+            <td>
+                <form class="inline" th:action="@{/admin/products/{id}/delete(id=${p.id})}" method="post">
+                    <button type="submit" class="small danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Orders</h2>
+    <p th:if="${orders.isEmpty()}" class="muted">No orders yet.</p>
+    <table th:unless="${orders.isEmpty()}">
+        <thead><tr><th>#</th><th>Customer</th><th>Email</th><th>Items</th><th>Total</th><th>Placed</th></tr></thead>
+        <tbody>
+        <tr th:each="o : ${orders}">
+            <td><a th:href="@{/order/{id}(id=${o.id})}" th:text="${o.id}">1</a></td>
+            <td th:text="${o.customerName}">Name</td>
+            <td th:text="${o.email}">email</td>
+            <td th:text="${o.items.size()}">1</td>
+            <td>₹<span th:text="${#numbers.formatDecimal(o.total, 1, 'COMMA', 2, 'POINT')}">0</span></td>
+            <td th:text="${#temporals.format(o.createdAt, 'dd MMM yyyy HH:mm')}">date</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

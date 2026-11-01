@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header">
+    <nav class="nav">
+        <a class="brand" th:href="@{/}">Simple Shop</a>
+        <form class="search" th:action="@{/}" method="get">
+            <input type="text" name="q" placeholder="Search products..." th:value="${q}">
+            <button type="submit">Search</button>
+        </form>
+        <div class="links">
+            <a th:href="@{/cart}">Cart (<span th:text="${cartCount}">0</span>)</a>
+            <a th:href="@{/admin}">Admin</a>
+        </div>
+    </nav>
+</header>
+
+<div th:fragment="messages">
+    <div class="alert success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+</div>
+
+</body>
+</html>
